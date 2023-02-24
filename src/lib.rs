@@ -43,6 +43,12 @@ impl Answer {
     }
 }
 
+impl From<i64> for Answer {
+    fn from(num: i64) -> Self {
+        Self { num }
+    }
+}
+
 #[derive(Clone, Copy, Debug)]
 pub enum Operation {
     Sum { a: u8, b: u8 },
@@ -54,19 +60,17 @@ pub enum Operation {
 }
 
 impl Operation {
-    pub fn reduce(self) -> Answer {
-        Answer {
-            num: match self {
-                Operation::Sum { a, b } => (a + b).into(),
-                Operation::Sub { a, b } => (a as i16 - b as i16).into(),
-                Operation::Mul { a, b } => (a as u16 * b as u16).into(),
-                Operation::Div { a, b } => (a / b).into(),
-                Operation::Rem { a, b } => (a % b).into(),
-                Operation::Fact(0) => 1,
-                Operation::Fact(a) => (1..=a as i64)
-                    .reduce(|acc, e| acc.saturating_mul(e))
-                    .unwrap(),
-            },
+    pub fn reduce(self) -> i64 {
+        match self {
+            Operation::Sum { a, b } => (a + b).into(),
+            Operation::Sub { a, b } => (a as i16 - b as i16).into(),
+            Operation::Mul { a, b } => (a as u16 * b as u16).into(),
+            Operation::Div { a, b } => (a / b).into(),
+            Operation::Rem { a, b } => (a % b).into(),
+            Operation::Fact(0) => 1,
+            Operation::Fact(a) => (1..=a as i64)
+                .reduce(|acc, e| acc.saturating_mul(e))
+                .unwrap(),
         }
     }
     pub fn encode(self) -> Box<[u8]> {

@@ -33,7 +33,7 @@ fn main() -> anyhow::Result<()> {
                 stream.write_all(&operation.encode())?;
                 let len = stream.read(&mut buffer)?;
                 let answer = Answer::try_from(Tlv::try_from(&buffer[..len])?)?;
-                println!("{} = {}", operation, answer.num);
+                println!("Accumulated value = {}", answer.num);
             }
             Err(_) => println!("Could not parse operation. Please, try again."),
         }

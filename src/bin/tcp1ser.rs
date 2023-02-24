@@ -4,7 +4,7 @@ use std::{
 };
 
 use clap::Parser;
-use tcp1::{Operation, TlvIterator};
+use tcp1::{Answer, Operation, TlvIterator};
 
 #[derive(Debug, Parser)]
 struct Args {
@@ -26,10 +26,11 @@ fn main() -> anyhow::Result<()> {
                 Ok(len) if len > 0 => {
                     for tlv in TlvIterator::process(&buffer[..len]) {
                         if let Ok(operation) = TryInto::<Operation>::try_into(tlv) {
-                            let answer = operation.reduce();
-                            acc = acc.saturating_add(answer.num);
-                            stream.write_all(&answer.encode())?;
-                            println!("New accumulator value: {acc}");
+                            let result = operation.reduce();
+                            acc = acc.saturating_add(result);
+
+                            stream.write_all(&Answer::from(acc).encode())?;
+                            println!("{operation} = {result}");
                         } else {
                             eprintln!("Received a wrong operation.")
                         }
