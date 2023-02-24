@@ -1,0 +1,10 @@
+[package]
+name = "tcp1"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.69"
+clap = { version = "4.1.6", features = ["derive", "wrap_help"] }
+regex = "1.7.1"
+thiserror = "1.0.38"
