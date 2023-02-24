@@ -21,6 +21,8 @@ fn main() -> anyhow::Result<()> {
     let mut buffer = [0u8; 2048];
     let mut stream = TcpStream::connect(SocketAddr::from((args.ip, args.dst_port)))?;
 
+    println!("Enter arithmetic expressions using infix notation. For example: 10 * 3 or 5!.");
+
     for line in stdin().lines() {
         let iline = line?;
         if iline.trim() == "QUIT" {
