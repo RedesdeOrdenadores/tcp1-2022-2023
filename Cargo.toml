@@ -3,7 +3,7 @@ authors = ["Miguel Rodríguez Pérez <miguel@det.uvigo.gal>"]
 description = "A simple solution to the second programming exercise of the CN subject for course 2022–2023"
 license = "GPL-3.0-or-later"
 name = "tcp1"
-version = "0.1.2"
+version = "0.2.0"
 edition = "2021"
 
 [dependencies]
