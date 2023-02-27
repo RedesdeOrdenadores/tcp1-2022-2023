@@ -72,7 +72,7 @@ pub enum Operation {
 impl Operation {
     pub fn reduce(self) -> i64 {
         match self {
-            Operation::Sum { a, b } => (a + b).into(),
+            Operation::Sum { a, b } => (a as u16 + b as u16).into(),
             Operation::Sub { a, b } => (a as i16 - b as i16).into(),
             Operation::Mul { a, b } => (a as u16 * b as u16).into(),
             Operation::Div { a, b } => (a / b).into(),
