@@ -132,7 +132,7 @@ impl Display for Operation {
             Operation::Sum { a, b } => write!(f, "{a}+{b}"),
             Operation::Sub { a, b } => write!(f, "{a}-{b}"),
             Operation::Mul { a, b } => write!(f, "{a}×{b}"),
-            Operation::Div { a, b } => write!(f, "{a}/{b}"),
+            Operation::Div { a, b } => write!(f, "{a}÷{b}"),
             Operation::Rem { a, b } => write!(f, "{a}%{b}"),
             Operation::Fact(a) => write!(f, "{a}!"),
         }
@@ -143,36 +143,31 @@ impl FromStr for Operation {
     type Err = TCPLibError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let regex = Regex::new(r"^\s*([0-9]+)\s*([+\-*/%!])\s*([0-9]+)?").unwrap();
-        let elements: Vec<_> = match regex.captures(s) {
+        let regex = Regex::new(r"^\s*([0-9]+)\s*([+\-*×x/÷%!])\s*([0-9]+)?").unwrap();
+        let elements: Box<_> = match regex.captures(s) {
             Some(captures) => captures.iter().skip(1).collect(),
-            None => return Err(TCPLibError::Generic),
+            None => return Err(TCPLibError::Parse),
         };
 
         let (a, b) = match elements[..] {
-            [Some(match_a), Some(_), Some(match_b)] => (
-                match_a.as_str().parse().map_err(|_| TCPLibError::Generic)?,
-                match_b.as_str().parse().map_err(|_| TCPLibError::Generic)?,
-            ),
-            [Some(match_a), Some(_), None] => (
-                match_a.as_str().parse().map_err(|_| TCPLibError::Generic)?,
-                0u8,
-            ),
+            [Some(match_a), Some(_), Some(match_b)] => {
+                (match_a.as_str().parse()?, match_b.as_str().parse()?)
+            }
+            [Some(match_a), Some(_), None] => (match_a.as_str().parse()?, 0u8),
             _ => {
-                return Err(TCPLibError::Generic);
+                return Err(TCPLibError::Parse);
             }
         };
 
-        let operation = match elements[1].unwrap().as_str() {
-            "+" if elements[2].is_some() => Operation::Sum { a, b },
-            "-" if elements[2].is_some() => Operation::Sub { a, b },
-            "*" if elements[2].is_some() => Operation::Mul { a, b },
-            "/" if elements[2].is_some() => Operation::Div { a, b },
-            "%" if elements[2].is_some() => Operation::Rem { a, b },
-            "!" if elements[2].is_none() => Operation::Fact(a),
-            _ => {
-                return Err(TCPLibError::Generic);
-            }
+        let operation = match elements[1].map(|m| m.as_str()) {
+            Some("+") if elements[2].is_some() => Operation::Sum { a, b },
+            Some("-") if elements[2].is_some() => Operation::Sub { a, b },
+            Some("*" | "×" | "x") if elements[2].is_some() => Operation::Mul { a, b },
+            Some("/" | "÷") if elements[2].is_some() => Operation::Div { a, b },
+            Some("%") if elements[2].is_some() => Operation::Rem { a, b },
+            Some("!") if elements[2].is_none() => Operation::Fact(a),
+            Some(op) => return Err(TCPLibError::UnsupportedOperation(op.to_string())),
+            None => return Err(TCPLibError::Parse),
         };
 
         Ok(operation)
