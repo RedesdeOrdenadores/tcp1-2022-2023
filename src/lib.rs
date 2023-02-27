@@ -35,7 +35,7 @@ impl<'a> TryFrom<Tlv<'a>> for Answer {
 
 impl Answer {
     pub fn encode(self) -> Box<[u8]> {
-        [TlvType::Numi64 as u8, 8]
+        [TlvType::Numi64 as u8, self.num.to_be_bytes().len() as u8]
             .iter()
             .chain(&self.num.to_be_bytes())
             .copied()
