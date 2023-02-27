@@ -4,6 +4,7 @@ use std::{
 };
 
 use clap::Parser;
+use socket2::{Domain, Socket, Type};
 use tcp1::{Answer, Operation, TlvIterator};
 
 #[derive(Debug, Parser)]
@@ -16,7 +17,13 @@ struct Args {
 fn main() -> anyhow::Result<()> {
     let args = Args::parse();
 
-    let listener = TcpListener::bind(SocketAddr::from((Ipv6Addr::UNSPECIFIED, args.port)))?;
+    // We need to use the socket2 create to properly support Windows
+    let socket = Socket::new(Domain::IPV6, Type::STREAM, None)?;
+    socket.set_only_v6(false)?;
+    socket.bind(&SocketAddr::from((Ipv6Addr::UNSPECIFIED, args.port)).into())?;
+    socket.listen(128)?;
+    let listener: TcpListener = socket.into();
+
     let mut acc = 0i64;
     loop {
         let (mut stream, _addr) = listener.accept()?;
