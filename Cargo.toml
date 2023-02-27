@@ -12,3 +12,9 @@ clap = { version = "4.1.6", features = ["derive", "wrap_help"] }
 regex = "1.7.1"
 socket2 = "0.5.1"
 thiserror = "1.0.38"
+
+[profile.release]
+opt-level = "z"
+strip = true
+lto = true
+codegen-units = 1
