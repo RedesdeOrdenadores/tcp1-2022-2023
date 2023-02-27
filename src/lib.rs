@@ -1,4 +1,6 @@
 use regex::Regex;
+use std::array::TryFromSliceError;
+use std::num::ParseIntError;
 use std::{fmt::Display, str::FromStr};
 use thiserror::Error;
 use tlv::TlvType;
@@ -10,6 +12,14 @@ pub use tlv::TlvIterator;
 
 #[derive(Clone, Error, Debug)]
 pub enum TCPLibError {
+    #[error("Unsupported operation {0}")]
+    UnsupportedOperation(String),
+    #[error("Could not parse operation")]
+    Parse,
+    #[error("Not enough data in TLV")]
+    NotEnoughData(#[from] TryFromSliceError),
+    #[error("Could not parse integer")]
+    ParseIntError(#[from] ParseIntError),
     #[error("Something wrong")]
     Generic,
 }
@@ -20,7 +30,7 @@ pub struct Answer {
 }
 
 impl<'a> TryFrom<Tlv<'a>> for Answer {
-    type Error = anyhow::Error;
+    type Error = TCPLibError;
 
     fn try_from(tlv: Tlv) -> Result<Self, Self::Error> {
         if tlv.tag == TlvType::Numi64 && tlv.length == 8 {
@@ -28,7 +38,7 @@ impl<'a> TryFrom<Tlv<'a>> for Answer {
                 num: i64::from_be_bytes(tlv.data.try_into()?),
             })
         } else {
-            Err(TCPLibError::Generic.into())
+            Err(TCPLibError::Generic)
         }
     }
 }
