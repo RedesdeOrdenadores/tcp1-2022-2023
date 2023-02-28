@@ -34,11 +34,16 @@ fn main() -> anyhow::Result<()> {
                 Ok(len) if len > 0 => {
                     for tlv in TlvIterator::process(&buffer[..len]) {
                         if let Ok(operation) = TryInto::<Operation>::try_into(tlv) {
-                            let result = operation.reduce();
-                            acc = acc.saturating_add(result);
-
-                            stream.write_all(&Answer::from(acc).encode())?;
-                            println!("{operation} = {result}");
+                            match operation.reduce() {
+                                Ok(result) => {
+                                    acc = acc.saturating_add(result);
+                                    stream.write_all(&Answer::from(acc).encode())?;
+                                    println!("{operation} = {result}");
+                                }
+                                Err(e) => {
+                                    eprintln!("Could not calculate answer. {e}")
+                                }
+                            }
                         } else {
                             eprintln!("Received a wrong operation.")
                         }
