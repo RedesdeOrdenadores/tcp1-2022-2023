@@ -205,7 +205,7 @@ impl FromStr for Operation {
             Some("*" | "×" | "x") if elements[2].is_some() => Operation::Mul((a, b).into()),
             Some("/" | "÷") if elements[2].is_some() => Operation::Div((a, b.try_into()?).into()),
             Some("%") if elements[2].is_some() => Operation::Rem((a, b.try_into()?).into()),
-            Some("!") if elements[2].is_none() /*&& a >= 0*/ => Operation::Fact(a.into()),
+            Some("!") if elements[2].is_none() && a >= 0 => Operation::Fact(a.into()),
             Some(op) => return Err(OperationError::UnsupportedOperation(op.to_string())),
             None => return Err(OperationError::Parse),
         };
