@@ -45,11 +45,7 @@ impl<'a> TryFrom<Tlv<'a>> for Answer {
 
 impl Answer {
     pub fn encode(self) -> Box<[u8]> {
-        [TlvType::Numi64 as u8, self.num.to_be_bytes().len() as u8]
-            .iter()
-            .chain(&self.num.to_be_bytes())
-            .copied()
-            .collect()
+        Tlv::encode(TlvType::Numi64, &self.num.to_be_bytes()).unwrap()
     }
 }
 
@@ -85,12 +81,12 @@ impl Operation {
     }
     pub fn encode(self) -> Box<[u8]> {
         match self {
-            Operation::Sum { a, b } => [TlvType::Sum as u8, 2, a, b].iter().copied().collect(),
-            Operation::Sub { a, b } => [TlvType::Sub as u8, 2, a, b].iter().copied().collect(),
-            Operation::Mul { a, b } => [TlvType::Mul as u8, 2, a, b].iter().copied().collect(),
-            Operation::Div { a, b } => [TlvType::Div as u8, 2, a, b].iter().copied().collect(),
-            Operation::Rem { a, b } => [TlvType::Rem as u8, 2, a, b].iter().copied().collect(),
-            Operation::Fact(a) => [TlvType::Fact as u8, 1, a].iter().copied().collect(),
+            Operation::Sum { a, b } => Tlv::encode(TlvType::Sum, &[a, b]).unwrap(),
+            Operation::Sub { a, b } => Tlv::encode(TlvType::Sub, &[a, b]).unwrap(),
+            Operation::Mul { a, b } => Tlv::encode(TlvType::Mul, &[a, b]).unwrap(),
+            Operation::Div { a, b } => Tlv::encode(TlvType::Div, &[a, b]).unwrap(),
+            Operation::Rem { a, b } => Tlv::encode(TlvType::Rem, &[a, b]).unwrap(),
+            Operation::Fact(a) => Tlv::encode(TlvType::Fact, &[a]).unwrap(),
         }
     }
 }

@@ -6,6 +6,8 @@ pub enum TlvError {
     TagUnknown(u8),
     #[error("Wrong format for tag")]
     WrongFormat,
+    #[error("Too much data to be encoded")]
+    ExcessiveLength(usize),
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -40,6 +42,19 @@ pub struct Tlv<'a> {
     pub tag: TlvType,
     pub length: u8,
     pub data: &'a [u8],
+}
+
+impl<'a> Tlv<'a> {
+    pub fn encode(tag: TlvType, data: &[u8]) -> Result<Box<[u8]>, TlvError> {
+        if let Ok(length) = u8::try_from(data.len()) {
+            let mut res = vec![tag as u8, length];
+            res.extend(data);
+
+            Ok(res.into_boxed_slice())
+        } else {
+            Err(TlvError::ExcessiveLength(data.len()))
+        }
+    }
 }
 
 impl<'a> TryFrom<&'a [u8]> for Tlv<'a> {
