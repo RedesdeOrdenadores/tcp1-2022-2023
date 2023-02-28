@@ -3,12 +3,12 @@ authors = ["Miguel Rodríguez Pérez <miguel@det.uvigo.gal>"]
 description = "A simple solution to the second programming exercise of the CN subject for course 2022–2023"
 license = "GPL-3.0-or-later"
 name = "tcp1"
-version = "0.2.2"
+version = "0.4.0"
 edition = "2021"
 
 [dependencies]
 anyhow = "1.0.69"
-clap = { version = "4.1.6", features = ["derive", "wrap_help"] }
+clap = { version = "4.1.8", features = ["derive", "wrap_help"] }
 regex = "1.7.1"
 socket2 = "0.5.1"
 thiserror = "1.0.38"
