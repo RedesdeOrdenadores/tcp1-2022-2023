@@ -1,6 +1,6 @@
 # A Possible Implementation of the Remote TCP-Based Calculator Exercise for the Computer Networks Subject
 
-[![Build Status](https://github.com/migrax/tcp1-2022-2023/actions/workflows/build.yml/badge.svg)](https://github.com/migrax/tcp1-2022-2023/actions/workflows/build.yml)
+[![Build Status](https://github.com/RedesdeOrdenadores/tcp1-2022-2023/actions/workflows/build.yml/badge.svg)](https://github.com/migrax/tcp1-2022-2023/actions/workflows/build.yml)
 
 ## Overview
 
