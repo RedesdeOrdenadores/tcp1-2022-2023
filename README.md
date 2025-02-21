@@ -51,7 +51,7 @@ The list is as follows:
 
 ---
 #### Legal:
-Copyright ⓒ 2023 [Universidade de Vigo][uvigo].<br>
+Copyright ⓒ 2023–2025 [Universidade de Vigo][uvigo].<br>
 Author: Miguel Rodríguez Pérez <miguel@det.uvigo.gal>.<br>
 This software is licensed under the GNU General Public License, version 3 (GPL-3.0) or later. For information see LICENSE.
 
