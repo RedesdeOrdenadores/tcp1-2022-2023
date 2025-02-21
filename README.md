@@ -15,7 +15,7 @@ performance or security whatsoever.
 ## About the Code
 
 The client and server programs are contained in the files
-[tcp1cli.rs](src/bin/tcp1cli.rs) and [tcp2ser.rs](src/bin/tcp1ser.rs). They make
+[tcp1cli.rs](src/bin/tcp1cli.rs) and [tcp1ser.rs](src/bin/tcp1ser.rs). They make
 use of a little library for parsing the arithmetic operations both from the user
 and from/to the network.
 
