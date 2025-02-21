@@ -39,7 +39,7 @@ struct Args {
 fn main() -> anyhow::Result<()> {
     let args = Args::parse();
 
-    // We need to use the socket2 create to properly support Windows
+    // We need to use the socket2 crate to properly support Windows
     let socket = Socket::new(Domain::IPV6, Type::STREAM, None)?;
     socket.set_only_v6(false)?;
     socket.set_reuse_address(true)?;

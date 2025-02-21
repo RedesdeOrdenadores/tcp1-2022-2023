@@ -21,7 +21,7 @@
  */
 
 use std::{
-    io::{stdin, Read, Write},
+    io::{Read, Write, stdin},
     net::{IpAddr, SocketAddr, TcpStream},
 };
 
@@ -55,7 +55,7 @@ fn main() -> anyhow::Result<()> {
                 stream.write_all(&operation.encode())?;
                 let len = stream.read(&mut buffer)?;
                 let Answer(answer) = Tlv::try_from(&buffer[..len])?.try_into()?;
-                println!("Accumulated value = {}", answer);
+                println!("Accumulated value = {answer}");
             }
             Err(_) => println!("Could not parse operation. Please, try again."),
         }

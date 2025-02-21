@@ -30,7 +30,7 @@ use std::{
 use regex::Regex;
 use thiserror::Error;
 
-use crate::{tlv::TlvType, Tlv};
+use crate::{Tlv, tlv::TlvType};
 
 #[derive(Clone, Error, Debug)]
 pub enum OperationError {
@@ -132,7 +132,7 @@ impl Operation {
             Operation::Mul(BinomialOperationData(a, b)) => (a as i16 * b as i16).into(),
             Operation::Div(BinomialOperationData(a, b)) => (a / b.get()).into(),
             Operation::Rem(BinomialOperationData(a, b)) => (a % b.get()).into(),
-            Operation::Fact(MonomialOperationData(a)) if a == 0 => 1,
+            Operation::Fact(MonomialOperationData(0)) => 1,
             Operation::Fact(MonomialOperationData(a)) if a > 0 => (1..=a as i64)
                 .reduce(|acc, e| acc.saturating_mul(e))
                 .unwrap(),
@@ -151,7 +151,7 @@ impl Operation {
     }
 }
 
-impl<'a> TryFrom<Tlv<'a>> for Operation {
+impl TryFrom<Tlv<'_>> for Operation {
     type Error = OperationError;
 
     fn try_from(tlv: Tlv) -> Result<Self, Self::Error> {

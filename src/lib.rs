@@ -23,7 +23,6 @@
 use operation::OperationError;
 use std::array::TryFromSliceError;
 use std::num::{ParseIntError, TryFromIntError};
-use std::u8;
 
 use thiserror::Error;
 use tlv::TlvType;
@@ -56,7 +55,7 @@ pub enum TCPLibError {
 #[derive(Debug, PartialEq)]
 pub struct Answer(pub i64);
 
-impl<'a> TryFrom<Tlv<'a>> for Answer {
+impl TryFrom<Tlv<'_>> for Answer {
     type Error = TCPLibError;
 
     fn try_from(tlv: Tlv) -> Result<Self, Self::Error> {
